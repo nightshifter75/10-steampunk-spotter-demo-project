@@ -31,4 +31,36 @@ A set of 10 Ansible playbooks for **Cisco IOS** devices (switches/routers), desi
 5. Use playbooks 5, 7, and 10 as a "clean" baseline to demonstrate how a scan result without significant warnings should look.
 6. If required, present `requirements.yml` to demonstrate CVE checks at the collection version level.
 
-> Note: IPs, hostnames, and credentials are dummy data used solely for static analysis demonstration purposes; these playbooks are not intended to be run against real production devices.
+> [!NOTE] IPs, hostnames, and credentials are dummy data used solely for static analysis demonstration purposes; these playbooks are not intended to be run against real production devices.
+
+# 💡 AAP Core Compatibility & Steampunk Spotter Demo Guide
+
+Before running the commands, here is an important clarification based on the official **Red Hat Ansible Automation Platform (AAP)** lifecycle documentation:
+
+> 📌 **Key Takeaway**: **AAP 2.5, 2.6, and 2.7** all ship with **`ansible-core 2.16`** as their default version. 
+> 
+> The true highlight of **AAP 2.7** is that **`ansible-core 2.20`** is available as an **Execution Environment (EE) stream** exclusively in AAP 2.7 (it is *not* the platform default). Note that RHEL 8 is not supported as a managed OS for Core 2.20; customers requiring RHEL 8 support on control/managed nodes must stick with the 2.16 default. Additionally, **`ansible-core 2.18`** is available and supported across the entire lifecycle of AAP 2.5, 2.6, and 2.7.
+
+---
+
+## 📊 Core Version Comparison Matrix
+
+The most accurate and compelling comparison for your demo is not comparing defaults across versions, but rather highlighting the available Ansible Core streams:
+
+| Context / Role | Core Version | Spotter Flag |
+| :--- | :---: | :---: |
+| **Default** across AAP 2.5 / 2.6 / 2.7 | `2.16` | `-a 2.16` |
+| **Modern Option** available in 2.5 / 2.6 / 2.7 | `2.18` | `-a 2.18` |
+| **Exclusive EE Stream** introduced in AAP 2.7 | `2.20` | `-a 2.20` |
+
+---
+
+## 🎯 Practical Demo Tips & Workflow
+
+### 1. ⚙️ Use the `full` Profile
+Rules related to module deprecations and removals across `ansible-core` versions are part of the upgrade profile checks. To execute these upgrade checks, always pass the `--profile full` flag:
+
+```bash
+spotter scan playbooks/*.yml -a 2.16 --profile full
+spotter scan playbooks/*.yml -a 2.18 --profile full
+spotter scan playbooks/*.yml -a 2.20 --profile full
