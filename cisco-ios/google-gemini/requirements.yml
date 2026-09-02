@@ -1,0 +1,10 @@
+---
+# File di requisiti per le collezioni Ansible Network con versioni datate
+# Utile per evidenziare CVE e moduli deprecati durante lo scan con Steampunk Spotter.
+collections:
+  - name: cisco.ios
+    version: 2.1.0
+  - name: arista.eos
+    version: 2.0.0
+  - name: cisco.nxos
+    version: 2.0.0

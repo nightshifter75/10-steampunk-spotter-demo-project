@@ -1,0 +1,19 @@
+---
+- name: Configurazione Interfacce Trunk e Access
+  hosts: cisco_switches
+  gather_facts: false
+
+  tasks:
+    - name: Configura interfaccia GigabitEthernet0/1 (Uso di parametri legacy)
+      cisco.ios.ios_interface:
+        name: GigabitEthernet0/1
+        description: Uplink to Core
+        enabled: true
+        duplex: full
+        speed: 1000
+
+    - name: Configura VLAN su interfaccia tramite modulo non ottimizzato
+      cisco.ios.ios_switchport:
+        name: GigabitEthernet0/2
+        mode: access
+        access_vlan: 10

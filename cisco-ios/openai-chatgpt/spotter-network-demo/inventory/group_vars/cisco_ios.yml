@@ -1,0 +1,6 @@
+---
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: cisco.ios.ios
+ansible_user: automation
+# Deliberately no password here. Use an Ansible credential, environment variable,
+# or Ansible Vault in a real environment.

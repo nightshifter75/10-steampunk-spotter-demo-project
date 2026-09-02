@@ -1,0 +1,29 @@
+---
+- name: Configurazione Routing OSPF e Rotte Statiche
+  hosts: cisco_routers
+  gather_facts: false
+
+  tasks:
+    - name: Configura rotte statiche di backup
+      cisco.ios.ios_static_routes:
+        state: merged
+        config:
+          - address_families:
+              - mef: false
+                afi: ipv4
+                routes:
+                  - dest: 0.0.0.0/0
+                    next_hops:
+                      - forward_router_address: 192.168.1.1
+
+    - name: Configurazione istanza OSPF v2
+      cisco.ios.ios_ospfv2:
+        state: merged
+        config:
+          processes:
+            - process_id: 100
+              areas:
+                - area_id: "0"
+                  network:
+                    - address: 10.0.0.0
+                      wildcard_bits: 0.255.255.255

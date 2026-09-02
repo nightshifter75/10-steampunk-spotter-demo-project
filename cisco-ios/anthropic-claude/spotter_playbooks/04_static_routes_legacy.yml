@@ -1,0 +1,33 @@
+---
+# Playbook 4
+# Obiettivo: definire rotte statiche.
+# NOTA DIDATTICA: "cisco.ios.ios_static_route" è DEPRECATO in favore di
+# "cisco.ios.ios_static_routes" (resource module, plurale). Terzo caso
+# di modulo obsoleto per verificare il rilevamento di Spotter.
+
+- name: Configurazione rotte statiche (modulo legacy deprecato)
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Rotta di default verso il provider
+      cisco.ios.ios_static_route:
+        prefix: 0.0.0.0
+        mask: 0.0.0.0
+        next_hop: 203.0.113.2
+        state: present
+
+    - name: Rotta verso la rete filiale
+      cisco.ios.ios_static_route:
+        prefix: 172.16.0.0
+        mask: 255.255.0.0
+        next_hop: 192.168.10.254
+        state: present
+
+    - name: Rotta verso la rete DR/backup
+      cisco.ios.ios_static_route:
+        prefix: 10.50.0.0
+        mask: 255.255.255.0
+        next_hop: 192.168.10.253
+        state: present

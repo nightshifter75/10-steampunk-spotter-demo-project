@@ -1,0 +1,20 @@
+---
+- name: 002 - Configure VLAN database on access switches
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: 002 - 001 - Ensure required VLANs are present
+      cisco.ios.ios_vlans:
+        config:
+          - vlan_id: 10
+            name: USERS
+            state: active
+          - vlan_id: 20
+            name: SERVERS
+            state: active
+          - vlan_id: 99
+            name: MANAGEMENT
+            state: active
+        state: merged
+      when: device_role == 'access_switch'

@@ -1,0 +1,8 @@
+---
+# Intentionally old dependency set for Spotter upgrade/compatibility/SBOM demonstrations.
+# Do not use this file as a production recommendation.
+collections:
+  - name: cisco.ios
+    version: "2.5.0"
+  - name: ansible.netcommon
+    version: "2.5.1"

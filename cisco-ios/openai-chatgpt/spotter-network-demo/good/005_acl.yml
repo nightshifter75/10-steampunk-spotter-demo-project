@@ -1,0 +1,44 @@
+---
+- name: 005 - Configure management ACL and bind it to an interface
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: 005 - 001 - Define management ACL
+      cisco.ios.ios_acls:
+        config:
+          - afi: ipv4
+            acls:
+              - name: MGMT-IN
+                acl_type: extended
+                aces:
+                  - sequence: 10
+                    grant: permit
+                    protocol: tcp
+                    source:
+                      address: 10.10.10.0
+                      wildcard_bits: 0.0.0.255
+                    destination:
+                      any: true
+                    destination_port:
+                      eq: ssh
+                  - sequence: 100
+                    grant: deny
+                    protocol: ip
+                    source:
+                      any: true
+                    destination:
+                      any: true
+        state: merged
+
+    - name: 005 - 002 - Apply management ACL inbound
+      cisco.ios.ios_acl_interfaces:
+        config:
+          - name: GigabitEthernet1
+            access_groups:
+              - afi: ipv4
+                acls:
+                  - name: MGMT-IN
+                    direction: in
+        state: merged
+      when: device_role == 'router'

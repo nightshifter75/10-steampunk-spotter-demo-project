@@ -1,0 +1,46 @@
+---
+# Playbook 5
+# Obiettivo: definire una Access Control List per limitare il traffico
+# verso la VLAN di management.
+# NOTA DIDATTICA: qui viene usato il resource module MODERNO
+# "cisco.ios.ios_acls" -> utile per far vedere a Spotter anche un
+# esempio "corretto" da confrontare con i playbook legacy precedenti.
+
+- name: Configurazione ACL di protezione management (modulo moderno)
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Definisci ACL numerata per accesso management
+      cisco.ios.ios_acls:
+        config:
+          - afi: ipv4
+            acls:
+              - name: "100"
+                acl_type: extended
+                aces:
+                  - grant: permit
+                    protocol: tcp
+                    source:
+                      address: 192.168.10.0
+                      wildcard_bits: 0.0.0.255
+                    destination:
+                      address: 10.99.0.0
+                      wildcard_bits: 0.0.0.255
+                    destination_port:
+                      eq: 22
+                  - grant: deny
+                    protocol: ip
+                    source:
+                      any: true
+                    destination:
+                      address: 10.99.0.0
+                      wildcard_bits: 0.0.0.255
+                  - grant: permit
+                    protocol: ip
+                    source:
+                      any: true
+                    destination:
+                      any: true
+        state: merged

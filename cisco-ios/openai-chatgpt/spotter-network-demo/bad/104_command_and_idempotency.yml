@@ -1,0 +1,22 @@
+---
+# PURPOSE: valid networking tasks that demonstrate imperative/non-idempotent patterns.
+- name: 104 - Command and idempotency anti-patterns
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: 104 - 001 - Run a show command and claim it always changed the device
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      changed_when: true
+
+    - name: 104 - 002 - Configure NTP with generic CLI instead of ios_ntp_global resource module
+      cisco.ios.ios_config:
+        lines:
+          - ntp server 192.0.2.123
+
+    - name: 104 - 003 - Configure hostname with generic CLI instead of ios_hostname resource module
+      cisco.ios.ios_config:
+        lines:
+          - hostname BAD-DEMO-HOST

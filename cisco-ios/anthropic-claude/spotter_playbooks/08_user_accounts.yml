@@ -1,0 +1,28 @@
+---
+# Playbook 8
+# Obiettivo: gestire gli account locali sugli apparati.
+# NOTA DIDATTICA: "cisco.ios.ios_user" risulta DEPRECATO nelle versioni
+# recenti della collection cisco.ios in favore di approcci basati su
+# AAA/resource module dedicati. Inoltre la password è scritta in chiaro
+# nel playbook: pattern SCONSIGLIATO (dovrebbe usare Ansible Vault) utile
+# a testare anche eventuali controlli di security hygiene di Spotter.
+
+- name: Gestione utenze locali (modulo legacy + credenziale in chiaro)
+  hosts: cisco_switches
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Crea utente amministratore locale
+      cisco.ios.ios_user:
+        name: netadmin
+        configured_password: "CambiaMi123!"   # ATTENZIONE: da spostare su Vault
+        privilege: 15
+        state: present
+
+    - name: Crea utente di sola lettura per monitoraggio
+      cisco.ios.ios_user:
+        name: monitoring
+        configured_password: "Monitor2024!"   # ATTENZIONE: da spostare su Vault
+        privilege: 1
+        state: present

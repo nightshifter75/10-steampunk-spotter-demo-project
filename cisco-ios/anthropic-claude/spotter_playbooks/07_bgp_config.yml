@@ -1,0 +1,28 @@
+---
+# Playbook 7
+# Obiettivo: configurare il routing BGP verso un provider esterno.
+# NOTA DIDATTICA: modulo moderno "cisco.ios.ios_bgp_global". Buon esempio
+# dichiarativo "corretto" per bilanciare i playbook con moduli deprecati.
+
+- name: Configurazione BGP verso provider (modulo moderno)
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Configura processo BGP e neighbor upstream
+      cisco.ios.ios_bgp_global:
+        config:
+          as_number: "65010"
+          router_id: 10.99.0.1
+          neighbors:
+            - neighbor_address: 203.0.113.2
+              remote_as: 65020
+              description: Peering con provider primario
+          address_family:
+            - afi: ipv4
+              safi: unicast
+              networks:
+                - address: 192.168.10.0
+                  netmask: 255.255.255.0
+        state: merged

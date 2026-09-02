@@ -1,0 +1,23 @@
+---
+# PURPOSE: intentionally insecure. NEVER copy these credential practices to production.
+- name: 103 - Security finding demo
+  hosts: cisco_ios
+  gather_facts: false
+  vars:
+    device_username: admin
+    device_password: SuperSecretPassword123!
+    snmp_community: public
+
+  tasks:
+    - name: 103 - 001 - Configure weak hardcoded SNMP community with raw CLI
+      cisco.ios.ios_config:
+        lines:
+          - "snmp-server community {{ snmp_community }} RO"
+
+    - name: 103 - 002 - Expose a hardcoded password through debug output
+      ansible.builtin.debug:
+        msg: "Connecting as {{ device_username }} with password {{ device_password }}"
+
+    - name: 103 - 003 - Save a credential-like value without no_log
+      ansible.builtin.set_fact:
+        temporary_enable_secret: "EnableSecret-DoNotUse"

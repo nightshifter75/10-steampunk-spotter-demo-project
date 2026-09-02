@@ -1,0 +1,17 @@
+---
+- name: Configurazione base apparati Cisco
+  hosts: cisco_switches
+  gather_facts: false
+
+  tasks:
+    - name: Impostazione Hostname (Modulo legacy/deprecato)
+      cisco.ios.ios_config:
+        lines:
+          - hostname SWITCH-CORE-01
+
+    - name: Configurazione Banner Motd
+      cisco.ios.ios_banner:
+        banner: motd
+        text: |
+          Accesso riservato al solo personale autorizzato.
+        state: present

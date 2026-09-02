@@ -1,0 +1,21 @@
+---
+- name: Standardizzazione System Logging Multi-Vendor
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Configura Syslog su apparati Cisco IOS
+      cisco.ios.ios_logging:
+        dest: host
+        name: 192.168.100.50
+        facility: local7
+        level: informational
+        state: present
+      when: inventory_hostname in groups['cisco']
+
+    - name: Configura Syslog su apparati Arista EOS (Modulo Legacy)
+      arista.eos.eos_logging:
+        dest: host
+        name: 192.168.100.50
+        state: present
+      when: inventory_hostname in groups['arista']

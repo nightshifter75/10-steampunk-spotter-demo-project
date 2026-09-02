@@ -1,0 +1,20 @@
+---
+# PURPOSE: feed Spotter names and patterns that are legacy, redirected or poor choices.
+- name: 101 - Legacy and redirected module demo
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: 101 - 001 - Use a redirected short collection module name
+      cisco.ios.interfaces:
+        config:
+          - name: GigabitEthernet1
+            description: This alias redirects to ios_interfaces
+        state: merged
+
+    - name: 101 - 002 - Push interface configuration as raw CLI instead of a resource module
+      cisco.ios.ios_config:
+        lines:
+          - description Configured imperatively
+          - no shutdown
+        parents: interface GigabitEthernet2

@@ -1,0 +1,35 @@
+---
+# Playbook 1
+# Obiettivo: configurare le interfacce fisiche su switch Cisco IOS
+# NOTA DIDATTICA: qui viene usato ios_config con comandi "raw" invece del
+# modulo dichiarativo ios_interfaces/ios_l2_interfaces -> utile per far
+# rilevare a Spotter un "wrong module usage" (best practice violation).
+
+- name: Configurazione interfacce (approccio non dichiarativo)
+  hosts: cisco_switches
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Imposta descrizione e stato delle interfacce via comandi CLI
+      cisco.ios.ios_config:
+        lines:
+          - description Uplink verso Core Switch
+          - no shutdown
+        parents: interface GigabitEthernet0/1
+
+    - name: Configura interfaccia di accesso per postazioni utente
+      cisco.ios.ios_config:
+        lines:
+          - description Porta utente Piano 1
+          - switchport mode access
+          - switchport access vlan 10
+          - no shutdown
+        parents: interface GigabitEthernet0/2
+
+    - name: Disabilita interfaccia non utilizzata
+      cisco.ios.ios_config:
+        lines:
+          - description NON USARE - riservata
+          - shutdown
+        parents: interface GigabitEthernet0/3

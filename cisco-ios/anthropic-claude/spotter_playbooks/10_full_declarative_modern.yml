@@ -1,0 +1,46 @@
+---
+# Playbook 10
+# Obiettivo: replicare la configurazione VLAN + L2 + L3 dei playbook 2-3
+# ma usando SOLO i resource module moderni e dichiarativi consigliati.
+# NOTA DIDATTICA: questo è il playbook "best practice" da confrontare
+# con i playbook 02, 03 e 04 (legacy) nel report di Spotter, per vedere
+# la differenza fra codice aggiornato e codice deprecato/obsoleto.
+
+- name: Configurazione dichiarativa moderna VLAN + L2 + L3
+  hosts: cisco_switches
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Definisci le VLAN (resource module moderno)
+      cisco.ios.ios_vlans:
+        config:
+          - vlan_id: 10
+            name: DATI
+            state: active
+          - vlan_id: 20
+            name: VOIP
+            state: active
+          - vlan_id: 99
+            name: MGMT
+            state: active
+        state: merged
+
+    - name: Configura le porte di accesso (resource module moderno)
+      cisco.ios.ios_l2_interfaces:
+        config:
+          - name: GigabitEthernet0/2
+            access:
+              vlan: 10
+          - name: GigabitEthernet0/3
+            access:
+              vlan: 20
+        state: merged
+
+    - name: Configura SVI di management (resource module moderno)
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: Vlan99
+            ipv4:
+              - address: 10.99.0.1/24
+        state: merged

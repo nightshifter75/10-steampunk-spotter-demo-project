@@ -1,0 +1,36 @@
+---
+# Playbook 2
+# Obiettivo: creare le VLAN sullo switch.
+# NOTA DIDATTICA: viene usato il modulo "cisco.ios.ios_vlan", DEPRECATO
+# in favore del resource module "cisco.ios.ios_vlans" -> ottimo caso
+# per far rilevare a Spotter un warning di obsolescenza/deprecazione modulo.
+
+- name: Creazione VLAN (modulo legacy deprecato)
+  hosts: cisco_switches
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Crea VLAN Dati
+      cisco.ios.ios_vlan:
+        vlan_id: 10
+        name: DATI
+        state: present
+
+    - name: Crea VLAN Voce
+      cisco.ios.ios_vlan:
+        vlan_id: 20
+        name: VOIP
+        state: present
+
+    - name: Crea VLAN Management
+      cisco.ios.ios_vlan:
+        vlan_id: 99
+        name: MGMT
+        state: present
+
+    - name: Crea VLAN Guest
+      cisco.ios.ios_vlan:
+        vlan_id: 100
+        name: GUEST
+        state: present

@@ -1,0 +1,26 @@
+---
+# Playbook 9
+# Obiettivo: raccogliere facts dagli apparati e salvare un backup della
+# configurazione corrente prima di interventi manutentivi.
+# NOTA DIDATTICA: uso corretto di ios_facts + backup con ios_config,
+# ma con "gather_subset: all" (troppo ampio/pesante) e senza
+# "backup_options" personalizzate -> possibile suggerimento di
+# ottimizzazione da parte di Spotter.
+
+- name: Raccolta facts e backup configurazioni
+  hosts: cisco_all
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Raccogli tutti i facts disponibili (subset troppo ampio)
+      cisco.ios.ios_facts:
+        gather_subset: all
+
+    - name: Mostra versione IOS rilevata
+      ansible.builtin.debug:
+        msg: "Host {{ inventory_hostname }} esegue {{ ansible_net_version }}"
+
+    - name: Esegui backup della configurazione running
+      cisco.ios.ios_config:
+        backup: true

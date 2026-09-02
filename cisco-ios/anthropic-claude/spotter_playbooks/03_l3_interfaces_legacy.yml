@@ -1,0 +1,30 @@
+---
+# Playbook 3
+# Obiettivo: assegnare indirizzi IP alle interfacce L3 (SVI/routed port).
+# NOTA DIDATTICA: "cisco.ios.ios_l3_interface" è DEPRECATO in favore di
+# "cisco.ios.ios_l3_interfaces" (resource module). Ulteriore caso di
+# obsolescenza per il test di Spotter.
+
+- name: Assegnazione IP interfacce L3 (modulo legacy deprecato)
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: IP su interfaccia verso WAN
+      cisco.ios.ios_l3_interface:
+        name: GigabitEthernet0/0
+        ipv4: 203.0.113.1/30
+        state: present
+
+    - name: IP su interfaccia verso LAN
+      cisco.ios.ios_l3_interface:
+        name: GigabitEthernet0/1
+        ipv4: 192.168.10.1/24
+        state: present
+
+    - name: IP su SVI VLAN Management
+      cisco.ios.ios_l3_interface:
+        name: Vlan99
+        ipv4: 10.99.0.1/24
+        state: present

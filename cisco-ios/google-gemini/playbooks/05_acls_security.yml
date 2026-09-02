@@ -1,0 +1,31 @@
+---
+- name: Hardening e APPLICAZIONE ACL di Sicurezza
+  hosts: cisco_switches
+  gather_facts: false
+
+  tasks:
+    - name: Crea utente Amministratore (Credenziali Hardcoded / No Secret)
+      cisco.ios.ios_user:
+        name: admin_ops
+        configured_password: "Password123!"
+        privilege: 15
+        state: present
+
+    - name: Configura ACL per l'accesso VTY
+      cisco.ios.ios_acls:
+        state: merged
+        config:
+          - afi: ipv4
+            acls:
+              - name: RESTRICT-ADMIN-ACCESS
+                type: extended
+                rules:
+                  - grant: permit
+                    protocol: tcp
+                    source:
+                      subnet_address: 10.10.10.0
+                      wildcard_bits: 0.0.0.255
+                    destination:
+                      any: true
+                    destination_port_protocol:
+                      eq: ssh

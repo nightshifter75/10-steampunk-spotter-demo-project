@@ -1,0 +1,17 @@
+---
+- name: 004 - Configure routed interfaces
+  hosts: cisco_ios
+  gather_facts: false
+
+  tasks:
+    - name: 004 - 001 - Configure IPv4 addressing declaratively
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: GigabitEthernet1
+            ipv4:
+              - address: 198.51.100.1/30
+          - name: Loopback0
+            ipv4:
+              - address: 203.0.113.11/32
+        state: merged
+      when: device_role == 'router'

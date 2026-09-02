@@ -1,0 +1,51 @@
+---
+# PURPOSE: "Spotter torture test". This file intentionally mixes multiple bad practices.
+- name: 105 - Everything wrong demo
+  hosts: cisco_ios
+  gather_facts: false
+  ignore_errors: true
+  vars:
+    admin_password: "Cisco123!"
+
+  tasks:
+    - name: 105 - 001 - Use a redirect instead of canonical FQCN
+      cisco.ios.vlans:
+        config:
+          - vlan_id: 777
+            name: TORTURE_TEST
+        state: merged
+
+    - name: 105 - 002 - Use generic CLI for a declarative resource
+      cisco.ios.ios_config:
+        lines:
+          - interface Loopback77
+          - description Created using a fragile flat command list
+          - ip address 192.0.2.77 255.255.255.255
+
+    - name: 105 - 003 - Use an unknown parameter
+      cisco.ios.ios_facts:
+        gather_subset:
+          - min
+        definitely_not_a_real_parameter: yes
+
+    - name: 105 - 004 - Leak a hardcoded credential
+      ansible.builtin.debug:
+        msg: "Emergency network password is {{ admin_password }}"
+
+    - name: 105 - 005 - Old-style loop construct for upgrade checks
+      ansible.builtin.debug:
+        msg: "Legacy loop item {{ item }}"
+      with_items:
+        - rtr01
+        - sw01
+        - sw02
+
+    - name: 105 - 006 - Force a non-boolean conditional pattern for Ansible 2.19+ checks
+      ansible.builtin.debug:
+        msg: "Conditional compatibility test"
+      when: "{{ inventory_hostname }}"
+
+    - name: 105 - 007 - Use shell on the control node where a dedicated action is preferable
+      ansible.builtin.shell: "echo {{ inventory_hostname }} >> /tmp/spotter-network-demo.log"
+      delegate_to: localhost
+      changed_when: true

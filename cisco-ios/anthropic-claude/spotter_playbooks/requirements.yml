@@ -1,0 +1,12 @@
+---
+# Requirements per i playbook di test.
+# NOTA DIDATTICA: la versione di "cisco.ios" è FISSATA a una release
+# volutamente datata (invece di usare l'ultima disponibile o un range).
+# Utile per verificare se Spotter segnala versioni di collection con
+# CVE note o semplicemente obsolete rispetto all'ultima release.
+
+collections:
+  - name: cisco.ios
+    version: "3.3.0"
+  - name: ansible.netcommon
+    version: "5.1.0"

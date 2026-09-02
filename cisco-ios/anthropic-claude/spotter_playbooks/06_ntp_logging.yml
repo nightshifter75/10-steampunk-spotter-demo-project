@@ -1,0 +1,32 @@
+---
+# Playbook 6
+# Obiettivo: configurare NTP e logging centralizzato.
+# NOTA DIDATTICA: la parte NTP usa il modulo dedicato "ios_ntp_global"
+# (corretto), mentre per il logging viene usato "ios_command" con comandi
+# "config" -> pattern SCONSIGLIATO, dato che esiste il resource module
+# dedicato "ios_logging_global". Ottimo per il rilevamento "wrong module".
+
+- name: Configurazione NTP (modulo corretto) e Logging (modulo errato)
+  hosts: cisco_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Configura server NTP aziendali
+      cisco.ios.ios_ntp_global:
+        config:
+          servers:
+            - server: 10.0.0.1
+              prefer: true
+            - server: 10.0.0.2
+          source_int: Loopback0
+        state: merged
+
+    - name: Configura syslog remoto (uso improprio di ios_command per un task di configurazione)
+      cisco.ios.ios_command:
+        commands:
+          - configure terminal
+          - logging host 10.0.0.50
+          - logging trap informational
+          - logging source-interface Loopback0
+          - end
