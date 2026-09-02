@@ -34,12 +34,11 @@ A set of 10 Ansible playbooks for **Cisco IOS** devices (switches/routers), desi
 > [!NOTE]
 > IPs, hostnames, and credentials are dummy data used solely for static analysis demonstration purposes; these playbooks are not intended to be run against real production devices.
 
-# 💡 AAP Core Compatibility & Steampunk Spotter Demo Guide
+## 💡 AAP Core Compatibility & Steampunk Spotter Demo Guide
 
-Before running the commands, here is an important clarification based on the official **Red Hat Ansible Automation Platform (AAP)** lifecycle documentation:
-
+> [!WARNING]
+> Before running the commands, here is an important clarification based on the official **Red Hat Ansible Automation Platform (AAP)** lifecycle documentation:
 > 📌 **Key Takeaway**: **AAP 2.5, 2.6, and 2.7** all ship with **`ansible-core 2.16`** as their default version. 
-> 
 > The true highlight of **AAP 2.7** is that **`ansible-core 2.20`** is available as an **Execution Environment (EE) stream** exclusively in AAP 2.7 (it is *not* the platform default). Note that RHEL 8 is not supported as a managed OS for Core 2.20; customers requiring RHEL 8 support on control/managed nodes must stick with the 2.16 default. Additionally, **`ansible-core 2.18`** is available and supported across the entire lifecycle of AAP 2.5, 2.6, and 2.7.
 
 ---
@@ -58,10 +57,27 @@ The most accurate and compelling comparison for your demo is not comparing defau
 
 ## 🎯 Practical Demo Tips & Workflow
 
-### 1. ⚙️ Use the `full` Profile
+### 1. Use the `full` Profile
 Rules related to module deprecations and removals across `ansible-core` versions are part of the upgrade profile checks. To execute these upgrade checks, always pass the `--profile full` flag:
 
-```bash
+```
 spotter scan playbooks/*.yml -a 2.16 --profile full
 spotter scan playbooks/*.yml -a 2.18 --profile full
 spotter scan playbooks/*.yml -a 2.20 --profile full
+```
+
+### 1. Save scan output for comparison
+Save the output of each scan (using JSON or your preferred export format) to easily compare them on screen during the meeting. This allows you to show a "before/after" table instead of re-running live commands.
+
+### 3. Highlight deprecated module playbooks
+Focus on playbooks containing deprecated modules (`02`, `03`, `04`, `08`). They are the best candidates to demonstrate how the same warning escalates from a "hint/warning" on Core 2.16 to a blocking "error" on Core 2.20 as Ansible permanently removes legacy modules in newer releases.
+
+### 4. Security profile demo
+Playbook `08` (containing a plaintext password) is also ideal for testing the `security` profile:
+
+```bash
+spotter scan playbooks/08_user_accounts.yml --profile security
+```
+
+### 5. Outdated collection scan (requirements.yml)
+Scan requirements.yml (which uses older collection versions like cisco.ios 3.3.0) alongside the playbooks to highlight any known CVEs associated with that specific collection version, regardless of the ansible-core version in use.
