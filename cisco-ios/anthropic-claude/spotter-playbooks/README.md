@@ -37,8 +37,8 @@ A set of 10 Ansible playbooks for **Cisco IOS** devices (switches/routers), desi
 ## 💡 AAP Core Compatibility & Steampunk Spotter Demo Guide
 
 > [!WARNING]
-> Before running the commands, here is an important clarification based on the official **Red Hat Ansible Automation Platform (AAP)** lifecycle documentation:
-> 📌 **Key Takeaway**: **AAP 2.5, 2.6, and 2.7** all ship with **`ansible-core 2.16`** as their default version. 
+> Before running the commands, here is an important clarification based on the official AAP lifecycle documentation:
+> 📌 **AAP 2.5, 2.6, and 2.7** all ship with **`ansible-core 2.16`** as their default version. 
 > The true highlight of **AAP 2.7** is that **`ansible-core 2.20`** is available as an **Execution Environment (EE) stream** exclusively in AAP 2.7 (it is *not* the platform default). Note that RHEL 8 is not supported as a managed OS for Core 2.20; customers requiring RHEL 8 support on control/managed nodes must stick with the 2.16 default. Additionally, **`ansible-core 2.18`** is available and supported across the entire lifecycle of AAP 2.5, 2.6, and 2.7.
 
 ---
