@@ -31,7 +31,8 @@ A set of 10 Ansible playbooks for **Cisco IOS** devices (switches/routers), desi
 5. Use playbooks 5, 7, and 10 as a "clean" baseline to demonstrate how a scan result without significant warnings should look.
 6. If required, present `requirements.yml` to demonstrate CVE checks at the collection version level.
 
-> ![NOTE] IPs, hostnames, and credentials are dummy data used solely for static analysis demonstration purposes; these playbooks are not intended to be run against real production devices.
+>![NOTE]
+>IPs, hostnames, and credentials are dummy data used solely for static analysis demonstration purposes; these playbooks are not intended to be run against real production devices.
 
 # 💡 AAP Core Compatibility & Steampunk Spotter Demo Guide
 
