@@ -3,5 +3,5 @@
     package:
       - apache2
       - php7.4
-    state: present
+    state: test
     update_cache: yes
