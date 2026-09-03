@@ -1,0 +1,25 @@
+name: CI/CD workflow for Steampunk Spotter
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+ 
+      - name: Scan Ansible content with 2.16
+        uses: xlab-steampunk/spotter-action@master
+        with:
+          endpoint: https://api.spotter.steampunk.si/api
+          api_token: ${{ secrets.SPOTTER_API_TOKEN }}
+          #config: config.yaml
+          #paths: playbook.yaml
+          #exclude_values: true
+          #exclude_metadata: true
+          #display_level: error
+          #no_docs_url: true
+          ansible_version: 2.16
+          #profile: full
+          #skip_checks: E001,E903[fqcn=sensu.sensu_go.user]
+          #enforce_checks: E1300,E1301
+          #debug: true
